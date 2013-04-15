@@ -22,6 +22,13 @@ public class JSONMessage {
 		private static final String LabelId="id";
 		private static final String LabelData="data";
 		
+		private  String body;
+		
+		public String getBody()
+		{
+			return this.body;
+		}
+		
 		private Logger  logger;
 		
 		public JSONMessage()
@@ -33,6 +40,7 @@ public class JSONMessage {
 		
 		public boolean parse(String body)
 		{
+			this.body=body;
 			boolean result=Boolean.TRUE;
 			try
 			{
@@ -55,6 +63,8 @@ public class JSONMessage {
 			}
 			return result;
 		}
+		
+		
 		
 		
 		private HashMap<String , Object> construcHash(String values) throws ParseException
@@ -107,6 +117,34 @@ public class JSONMessage {
 				paramsJSon.put(me.getKey().toString(),me.getValue());
 			}
 			obj.put("parameter",JSONValue.toJSONString(paramsJSon));
+			return JSONValue.toJSONString(obj);
+		}
+		
+		public String getEnconding(String action, String id,HashMap<String,String> params,HashMap<String,String> data)
+		{
+			JSONObject obj = new JSONObject();
+			JSONObject paramsJSon= new JSONObject();
+			obj.put("action",action);
+			obj.put("id",id);
+			Set set = params.entrySet();
+			Iterator i = set.iterator();
+			while (i.hasNext())
+			{
+				Map.Entry me= (Map.Entry)i.next();
+				paramsJSon.put(me.getKey().toString(),me.getValue());
+			}
+			obj.put("parameter",JSONValue.toJSONString(paramsJSon));
+                        
+                        set = data.entrySet();
+			i = set.iterator();
+			while (i.hasNext())
+			{
+				Map.Entry me= (Map.Entry)i.next();
+				paramsJSon.put(me.getKey().toString(),me.getValue());
+			}
+			obj.put("data",JSONValue.toJSONString(paramsJSon));
+                        
+                        
 			return JSONValue.toJSONString(obj);
 		}
 }

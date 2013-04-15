@@ -4,24 +4,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import com.ExXothermic.RestFul.Client;
 
 import javax.swing.text.html.HTMLEditorKit.Parser;
 
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
-import com.ExXothermic.communication.ComunicationManagement;
+import com.ExXothermic.communication.ComunicationManagementForClients;
 import com.ExXothermic.communication.Response.TypeResponse;
 
 public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 	
 	
 	enum ServicesNames{ GETMYBOXCERT,LOCALVERIFY, AUTHENTICATE}
-	private Logger  logger=Logger.getLogger(ComunicationManagement.class.getName());
+	private Logger  logger=Logger.getLogger(ComunicationManagementForClients.class.getName());
 
 
 	@Override
 	public void Operation(WebSocket conn, String message, TypeResponse type) {
+		if(TypeResponse.CloseConnection==type)
+		{
+			
+			onCloseConnection(conn);
+		}
 		if(TypeResponse.Message==type)
 		{
 			
@@ -47,11 +53,16 @@ public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 						arr.add("myBoxChallenge");
 						if (validateParams(arr,parser.getData().keySet(),conn,parser.getAction(),true))
 						{
-							Authenticate(parser.getData().get("myBoxChallenge").toString(),conn);
+							Authenticate(parser,conn);
 						}
 						break;
 					case LOCALVERIFY:
-						
+						arr=new ArrayList<String>();
+						arr.add("myBoxIpAddress");
+						if (validateParams(arr,parser.getData().keySet(),conn,parser.getAction(),true))
+						{
+							LocalVerify(parser.getData().get("myBoxIpAddress").toString(),conn);
+						}
 						break;
 					default:
 						
@@ -67,15 +78,29 @@ public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 		}
 	}
 	
+	private void onCloseConnection(WebSocket conn) {
+		//Client clientRes=new Client();
+		//clientRes.disconnect(conn.getName());
+		
+	}
+
+	private void LocalVerify(String string, WebSocket conn) {
+		
+	}
+
 	private void operationGetMyBoxCert(String cert, WebSocket conn)
 	{
 		//validate certitificate
-		ComunicationManagement.getInstance().sendMessage(conn,FactoryMessage.getInstance().Authenticate(cert));
+		ComunicationManagementForClients.getInstance().sendMessage(conn,FactoryMessage.getInstance().Authenticate(cert));
 	}
 	
-	private void Authenticate(String  myBoxChallenge, WebSocket conn)
+	private void Authenticate(JSONMessage  parser, WebSocket conn)
 	{
-		
+		//validate is necesary
+		Client clientRes=new Client();
+		clientRes.register(parser.getId());
+		conn.setName(parser.getId());
+		ComunicationManagementForClients.getInstance().addWebsocket( conn);
 	}
 	
 	

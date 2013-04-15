@@ -13,13 +13,31 @@ import org.apache.log4j.Logger;
 public class Client {
 	
 	private Logger  logger=Logger.getLogger(this.getClass().getName());
-	public void Register(String serial)
+	private String url="http://localhost:8080/MyCentralServer/gears/";
+	
+	
+	public String register(String serial)
 	{
+		logger.info("Register Serial: "+serial);
+		String path="register?serial="+serial;
+		return CallToApi(path);
+	}
+	
+	public String disconnect(String serial)
+	{
+		logger.info("Disconnect Serial: "+serial);
+		String path="close?serial="+serial;
+		return CallToApi(path);
+	}
+	
+	private  String CallToApi(String path)
+	{
+		String output="";
 		 try {
 			 
 			 	logger.info("Call to RestFul service ");
-			 	logger.info("Serial: "+serial);
-				URL url = new URL("http://localhost:8080/MyCentralServer/gears/register?serial="+serial);
+			 	
+				URL url = new URL(this.url+path);
 				
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setRequestMethod("GET");
@@ -33,7 +51,7 @@ public class Client {
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 					(conn.getInputStream())));
 		 
-				String output;
+				
 
 				while ((output = br.readLine()) != null) {
 					logger.info(output);
@@ -50,5 +68,6 @@ public class Client {
 				  logger.error(e);
 		 
 			  }	
+		 return output; 
 	}
 }

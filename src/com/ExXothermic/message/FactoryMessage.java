@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
-import com.ExXothermic.communication.ComunicationManagement;
+import com.ExXothermic.communication.ComunicationManagementForClients;
 
 public class FactoryMessage {
 	
