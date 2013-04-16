@@ -60,7 +60,6 @@ public class ComunicationManagementForClients  extends ComunicationManager{
 	private ComunicationManagementForClients()
 	{
 		logger= Logger.getLogger(this.getClass().getName());
-	
 	}
 
 	@Override

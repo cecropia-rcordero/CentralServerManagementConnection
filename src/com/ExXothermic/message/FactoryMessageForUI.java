@@ -4,15 +4,17 @@ import java.util.HashMap;
 import org.java_websocket.WebSocket;
 public class FactoryMessageForUI {
 	private JSONMessage json= new JSONMessage();
-	public IMessage Error(String serial,String msj)
+	public IMessage Error(String serial,String transaction,String msj)
 	{
 		
 		return new IMessage() {
 			
 			private String serial;
 			private String msj;
-			public IMessage setSerialAndMsj(String serial,String msj)
+			private String transaction;
+			public IMessage setSerialAndMsj(String serial,String transaction,String msj)
 			{
+				this.transaction=transaction;
 				this.serial=serial;
 				this.msj=msj;
 				return this;
@@ -24,10 +26,10 @@ public class FactoryMessageForUI {
 			public String getMessage(WebSocket conn) {
 				HashMap<String, String> data=new HashMap<String, String>();
 				data.put("message",msj );
-				return FactoryMessageForUI.this.json.getEnconding("Error", this.serial, new HashMap<String, String>(),data);
+				return FactoryMessageForUI.this.json.getEnconding("Error", this.serial,this.transaction, new HashMap<String, String>(),data);
 				
 			}
-		}.setSerialAndMsj(serial, msj);
+		}.setSerialAndMsj(serial,transaction ,msj);
 		
 	}
 	

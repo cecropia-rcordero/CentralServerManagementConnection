@@ -14,7 +14,7 @@ public class ComunicationManagementForUI extends ComunicationManager {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub.
 		return "ComunicationManagementForUI";
 	}
 	

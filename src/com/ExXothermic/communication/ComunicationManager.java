@@ -56,10 +56,8 @@ public abstract class ComunicationManager  implements Runnable  {
 		boolean result=true;
 		try
 		{
-			
 			this.getServer().start();
-			logger.info( "Server "+this.getName()+"  started on port: " + this.getServer().getPort() + " on " +Calendar.getInstance().getTime().toString());
-			
+			logger.info( "Server "+this.getName()+"  started on port: " + this.getServer().getPort() + " on " +Calendar.getInstance().getTime().toString());	
 		}
 		catch ( Exception ex)
 		{
@@ -159,18 +157,18 @@ private HashMap<String, WebSocket> clients=new HashMap<String, WebSocket>();
 	 * @param key Identifier of the websocket  
 	 */
 	
-	public void removeWebSocket(String key)
+	public synchronized boolean removeWebSocket(String key)
 	{
-		this.clients.remove(key);
+		return null!=this.clients.remove(key)?true:false;	
 	}
 	
 	/**
 	 * Remove  a websocket connection
 	 * @param value Remove value from the hash
 	 */
-	public void removeWebSocket(WebSocket value)
+	public synchronized boolean removeWebSocket(WebSocket value)
 	{
-		this.clients.remove(value);
+		return null!=this.clients.remove(value)?true:false;	
 	}
 	/**
 	 * Get the specific WebSocket

@@ -61,14 +61,13 @@ public class ComunicationServer extends WebSocketServer {
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		logger.info( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " Conection Open" );
 		this.notifyObservers(new Response(Response.TypeResponse.NewConnection, conn, ""));
-
-			this.sendMessage(getMessageWhenOpenConnection(conn), conn);
-
+		this.sendMessage(getMessageWhenOpenConnection(conn), conn);
 	}
 
 	@Override
 	public void onClose( WebSocket conn, int code, String reason, boolean remote ) {	
 		logger.info(conn + " Connection Close");
+		setChanged();
 		this.notifyObservers(new Response(Response.TypeResponse.CloseConnection, conn, ""));
 	}
 
@@ -80,6 +79,7 @@ public class ComunicationServer extends WebSocketServer {
 	}
 	@Override
 	public void onError( WebSocket conn, Exception ex ) {
+	
 		logger.error(conn, ex);
 		if( conn != null ) {
 			// some errors like port binding failed may not be assignable to a specific websocket

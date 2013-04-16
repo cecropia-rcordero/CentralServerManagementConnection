@@ -12,12 +12,13 @@ import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 
 import com.ExXothermic.communication.ComunicationManagementForClients;
+import com.ExXothermic.communication.ComunicationManagementForUI;
 import com.ExXothermic.communication.Response.TypeResponse;
 
 public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 	
 	
-	enum ServicesNames{ GETMYBOXCERT,LOCALVERIFY, AUTHENTICATE}
+	enum ServicesNames{ GETMYBOXCERT,LOCALVERIFY, AUTHENTICATE,SETCHANNELINFO,GETCHANNELINFO}
 	private Logger  logger=Logger.getLogger(ComunicationManagementForClients.class.getName());
 
 
@@ -25,7 +26,7 @@ public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 	public void Operation(WebSocket conn, String message, TypeResponse type) {
 		if(TypeResponse.CloseConnection==type)
 		{
-			
+
 			onCloseConnection(conn);
 		}
 		if(TypeResponse.Message==type)
@@ -64,6 +65,13 @@ public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 							LocalVerify(parser.getData().get("myBoxIpAddress").toString(),conn);
 						}
 						break;
+					case SETCHANNELINFO:
+							setChannelnfo(parser,conn);
+						break;
+					case GETCHANNELINFO:
+							getChannelnfo(parser,conn);
+						break;
+						
 					default:
 						
 						break;
@@ -78,9 +86,23 @@ public class ResponseMessageHandler extends ResponseMessageHandlerAbstract {
 		}
 	}
 	
+	private void getChannelnfo(JSONMessage parser, WebSocket conn) {
+		ComunicationManagementForUI ui= ComunicationManagementForUI.getInstance();
+		WebSocket socket=ui.getWebSocket(parser.getTransaction());
+		ui.sendMessage(socket, new  FactoryMessageForUI().getMessageFromJSonParser(parser));
+	}
+
+	private void setChannelnfo(JSONMessage parser, WebSocket conn) {
+		ComunicationManagementForUI ui= ComunicationManagementForUI.getInstance();
+		WebSocket socket=ui.getWebSocket(parser.getTransaction());
+		ui.sendMessage(socket, new  FactoryMessageForUI().getMessageFromJSonParser(parser));		
+	}
+
 	private void onCloseConnection(WebSocket conn) {
 		//Client clientRes=new Client();
 		//clientRes.disconnect(conn.getName());
+		ComunicationManagementForClients server=  ComunicationManagementForClients.getInstance();
+		server.removeWebSocket(conn.getName());
 		
 	}
 

@@ -28,26 +28,24 @@ public class FactoryMessage {
 	 
 	public IMessage  GetMyBoxCert()
 	{
-		return new IMessage() {
-			
+		return new IMessage() {		
 			@Override
 			public String getMessage(WebSocket conn) {
-				return FactoryMessage.this.json.getEnconding("GetMyBoxCert","", new HashMap<String, String>());
+				return FactoryMessage.this.json.getEnconding("GetMyBoxCert","","", new HashMap<String, String>());
 			}
 		};
 	}
 	
 	public IMessage  Authenticate(String cert)
 	{
-		return new IMessage() {
-			
+		return new IMessage() {	
 			private String cert;
 			@Override
 			public String getMessage(WebSocket conn) {
 				HashMap<String, String> hash = new HashMap<String, String>();
 				//Maybe will be change
 				hash.put("myBoxResponse", "algo");
-				return FactoryMessage.this.json.getEnconding("Authenticate",this.cert,hash );
+				return FactoryMessage.this.json.getEnconding("Authenticate","",this.cert,hash );
 			}
 			public IMessage setCert(String cert)
 			{
@@ -59,12 +57,11 @@ public class FactoryMessage {
 	public IMessage LocalVerify()
 	{
 		return new IMessage() {
-			
 			@Override
 			public String getMessage(WebSocket conn) {
 				HashMap<String, String> hash = new HashMap<String, String>();
 				hash.put("myBoxChallenge", "algo");
-				return FactoryMessage.this.json.getEnconding("myBoxInstallToken",conn.getName(),hash );
+				return FactoryMessage.this.json.getEnconding("myBoxInstallToken","",conn.getName(),hash );
 			}
 		};
 	}
